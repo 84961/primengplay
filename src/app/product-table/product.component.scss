@@ -1,0 +1,10 @@
+::ng-deep .p-paginator {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    margin-top: 1rem;
+  }
+
+  ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+    margin: 0 0.25rem;
+  }
