@@ -7,15 +7,53 @@ import { ProductsResponse } from './product';
   providedIn: 'root'
 })
 export class ProductService {
+  private baseUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) { }
 
-  getProducts(skip: number): Observable<ProductsResponse> {
-    return this.http.get<ProductsResponse>(`https://dummyjson.com/products?limit=10&skip=${skip}`);
+  getProducts(
+    skip: number, 
+    sortField?: string, 
+    sortOrder?: number, 
+    filters?: any,
+    globalFilter?: string
+  ): Observable<ProductsResponse> {
+    const page = Math.floor(skip / 10);
+    const payload = {
+      page,
+      limit: 10,
+      sortField,
+      sortOrder: sortOrder || 1,
+      filters,
+      globalFilter
+    };
+
+    return this.http.post<ProductsResponse>(`${this.baseUrl}/products`, payload);
   }
 
-  getAllProducts(): Observable<ProductsResponse> {
-    // Adjust limit according to your needs, here fetching all products at once
-    return this.http.get<ProductsResponse>(`https://dummyjson.com/products?limit=200`);
+  getAllProducts(
+    sortField?: string, 
+    sortOrder?: number, 
+    filters?: any,
+    globalFilter?: string
+  ): Observable<ProductsResponse> {
+    let params: any = {
+      limit: 100
+    };
+
+    if (sortField) {
+      params.sortField = sortField;
+      params.sortOrder = sortOrder || 1;
+    }
+
+    if (filters && Object.keys(filters).length > 0) {
+      params.filters = JSON.stringify(filters);
+    }
+
+    if (globalFilter) {
+      params.globalFilter = globalFilter;
+    }
+
+    return this.http.get<ProductsResponse>(`${this.baseUrl}/products`, { params });
   }
 }

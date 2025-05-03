@@ -1,1 +1,63 @@
 /* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+
+/* PrimeNG Component Custom Styles */
+:root {
+    --primary-color: #42b883;
+  }
+  
+  .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+    background: var(--primary-color);
+  }
+  
+  .p-inputswitch:not(.p-disabled):hover .p-inputswitch-slider {
+    background: #359268;
+  }
+  
+  .p-datatable {
+    .p-datatable-header {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      padding: 1rem;
+    }
+  
+    .p-datatable-thead > tr > th {
+      background: #f8f9fa;
+      color: #495057;
+      font-weight: 600;
+    }
+  
+    .p-datatable-tbody > tr {
+      background: #ffffff;
+      
+      &:hover {
+        background: #e9ecef;
+      }
+    }
+  
+    .p-column-filter {
+      margin-left: 0.5rem;
+    }
+  }
+  
+  /* Search Input Styling */
+  .p-input-icon-left {
+    width: 100%;
+    
+    i {
+      color: #6c757d;
+    }
+  
+    input {
+      width: 100%;
+      padding-left: 2.5rem;
+    }
+  }
+  
+  /* Switch Control Container */
+  .switch-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }

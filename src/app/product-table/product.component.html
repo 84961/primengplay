@@ -1,40 +1,105 @@
-<div class="container mt-4">
-    <div class="mb-3">
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="paginationToggle" 
-                   [(ngModel)]="isServerSidePagination"
-                   (change)="togglePagination()">
-            <label class="form-check-label" for="paginationToggle">
-                {{ isServerSidePagination ? 'Server-side' : 'Client-side' }} Pagination
-            </label>
-        </div>
-    </div>
-    <p-table
-      [value]="isServerSidePagination ? products : allProducts"
-      [paginator]="true"
-      [rows]="10"
-      [lazy]="isServerSidePagination"
-      [(first)]="first"
-      [totalRecords]="totalRecords"
-      [loading]="loading"
-      styleClass="table table-striped table-hover table-bordered"
-      (onLazyLoad)="isServerSidePagination ? loadProducts($event) : null"
-    >
-      <ng-template pTemplate="header">
-        <tr class="table-dark">
-          <th scope="col" class="text-center py-3">id</th>
-          <th scope="col" class="text-center py-3">Product Name</th>
-          <th scope="col" class="text-center py-3">Price</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-pdt>
-        <tr>
-          <td class="text-center py-2 px-3">{{ pdt.id }}</td>
-          <td class="py-2 px-3">{{ pdt.title }}</td>
-          <td class="text-end py-2 px-3">{{ pdt.price | currency }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-</div>
+<div class="card">
+  <!-- Switch Control -->
+  <div class="flex align-items-center gap-2 mb-3">
+    <p-inputSwitch [(ngModel)]="isServerSidePagination" (onChange)="togglePagination()">
+    </p-inputSwitch>
+    <label>
+      {{ isServerSidePagination ? 'Server-side' : 'Client-side' }} Operations
+    </label>
+  </div>
 
-{{first}}
+  <p-table #dt [value]="products" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
+    [lazy]="isServerSidePagination" [(first)]="first" [totalRecords]="totalRecords" [loading]="loading"
+    [filterDelay]="0" [globalFilterFields]="['id', 'title', 'price']" (onLazyLoad)="loadProducts($event)"
+    [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm" [rowHover]="true" [showGridlines]="true"
+    responsiveLayout="scroll">
+    <ng-template pTemplate="caption">
+      <div class="flex justify-content-between">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" [(ngModel)]="globalFilterValue" (input)="onGlobalFilter($event)"
+            placeholder="Search products..." />
+        </span>
+        <p-button type="button" label="Clear" (click)="clear(dt)" styleClass="p-button-outlined">
+        </p-button>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id" style="width:20%">
+          ID
+          <p-sortIcon field="id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="title" style="width:50%">
+          Title
+          <p-sortIcon field="title"></p-sortIcon>
+        </th>
+        <th pSortableColumn="price" style="width:30%">
+          Price
+          <p-sortIcon field="price"></p-sortIcon>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <p-columnFilter type="numeric" field="id" [showMatchModes]="true" matchMode="equals">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <div class="p-column-filter-row d-flex flex-row">
+                <p-inputNumber #idInput [ngModel]="value" placeholder="Search by ID" [showButtons]="false" [min]="0"
+                  class="w-full">
+                </p-inputNumber>
+                <button pButton type="button" icon="pi pi-search" (click)="filter(idInput.value)"
+                  class="p-button-outlined p-button-sm">
+                </button>
+              </div>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="text" field="title" [showMatchModes]="true" matchMode="equals">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <div class="p-column-filter-row d-flex flex-row">
+                <input #titleInput pInputText type="text" [ngModel]="value" placeholder="Search by title"
+                  class="w-full">
+                <button pButton type="button" icon="pi pi-search" (click)="filter(titleInput.value)"
+                  class="p-button-outlined p-button-sm">
+                </button>
+              </div>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="numeric" field="price" [showMatchModes]="true" matchMode="gte">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <div class="p-column-filter-row d-flex flex-row">
+                <p-inputNumber #priceInput [ngModel]="value" mode="currency" currency="USD" [showButtons]="false"
+                  placeholder="Search by price" class="w-full">
+                </p-inputNumber>
+                <button pButton type="button" icon="pi pi-search" (click)="filter(priceInput.value)"
+                  class="p-button-outlined p-button-sm">
+                </button>
+              </div>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{product.id}}</td>
+        <td>{{product.title}}</td>
+        <td>{{product.price | currency}}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center p-4">
+          <i class="pi pi-info-circle mr-2"></i>
+          No products found.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
