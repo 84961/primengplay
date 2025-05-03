@@ -8,6 +8,10 @@ export const routes: Routes = [
       component: HomeComponent,
     },
     {
+        path: 'generic-table',
+        loadComponent: () => import('./template-products/generic-product.component').then((m) => m.GenericProductTableComponent),
+    },
+    {
       path: 'product-table',
       loadChildren: () => import('./product-table/product.routes').then((m) => m.routes),
       providers: [
