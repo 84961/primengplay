@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { Table } from 'primeng/table';
+import { SidebarService } from '../services/sidebar.service';
 
 type TableFilters = { [key: string]: { value: any; matchMode: string; } | { value: any; matchMode: string; }[] };
 
@@ -40,7 +41,10 @@ export class ProductComponent implements OnInit {
     private destroy$ = new Subject<void>();
     private search$ = new Subject<string>();
 
-    constructor(private productService: ProductService) { }
+    constructor(
+        private productService: ProductService,
+        private sidebarService: SidebarService
+    ) { }
 
     ngOnInit() {
         if (!this.isServerSidePagination) {
@@ -286,5 +290,9 @@ export class ProductComponent implements OnInit {
             
             return String(valueA).localeCompare(String(valueB)) * order;
         });
+    }
+
+    requestChange(product: Product) {
+        this.sidebarService.openSidebar(product);
     }
 }
